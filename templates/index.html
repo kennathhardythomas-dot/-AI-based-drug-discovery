@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>HIV Molecule Predictor</title>
+
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Custom styles -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">AI DRUG DISCOVERY</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/manual">Manual Input</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title mb-3">Predict HIV Activity</h3>
+
+                    <form method="POST" class="row g-2 align-items-end">
+                        <div class="col-12 col-md-9">
+                            <select id="selected_smiles" name="selected_smiles" class="form-select" required>
+                                <option value="">-- Select Molecule --</option>
+                                {% for s in smiles_list %}
+                                <option value="{{ s }}" {% if selected_smiles==s %}selected{% endif %}>{{ s }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <button type="submit" class="btn btn-primary w-100">Predict</button>
+                        </div>
+                    </form>
+
+                    {% if prediction is not none %}
+                    <hr>
+                    <h5>Result</h5>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item"><strong>SMILES:</strong> {{ selected_smiles }}</li>
+                        <li class="list-group-item"><strong>Actual:</strong> {{ actual }}</li>
+                        <li class="list-group-item"><strong>Predicted:</strong> {{ prediction }}</li>
+                    </ul>
+                    {% if image %}
+                        <div class="text-center">
+                            <img src="data:image/png;base64,{{ image }}" class="img-fluid rounded border">
+                        </div>
+                    {% endif %}
+                    {% endif %}
+
+                    <hr>
+
+                    <h5>Search Functional Group</h5>
+                    <form action="/search_group" method="POST" class="row g-2 align-items-center">
+                        <div class="col-9">
+                            <select name="group" class="form-select">
+                                {% for name, smarts in functional_groups.items() %}
+                                <option value="{{ name }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <button type="submit" class="btn btn-outline-primary w-100">Search</button>
+                        </div>
+                    </form>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">Manual SMILES Input</h6>
+                            <small class="text-muted">Paste a SMILES for prediction.</small>
+                        </div>
+                        <a class="btn btn-secondary" href="/manual">Go</a>
+                    </div>
+
+                    <hr>
+
+                    <!-- ⭐ ADDED BUTTON HERE ⭐ -->
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <h6 class="mb-0">View All HIV Active Molecules</h6>
+                            <small class="text-muted">Shows molecules labeled as biologically active.</small>
+                        </div>
+                        <a href="/active" class="btn btn-success">View</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

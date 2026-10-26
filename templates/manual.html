@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manual SMILES Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">HIV Molecule Predictor</a>
+    </div>
+</nav>
+
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title mb-3">Enter SMILES</h4>
+
+                    <form method="POST" class="mb-3">
+                        <div class="mb-2">
+                            <label for="manual_smiles" class="form-label visually-hidden">SMILES</label>
+                            <input id="manual_smiles" name="manual_smiles" type="text" class="form-control" placeholder="C1=CC=CC=C1" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Predict</button>
+                    </form>
+
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endif %}
+
+                    {% if prediction is not none %}
+                        <h6>Result</h6>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item"><strong>Prediction:</strong> {{ prediction }}</li>
+                            <li class="list-group-item"><strong>Actual:</strong> {{ actual }}</li>
+                        </ul>
+
+                        {% if image %}
+                            <div class="text-center">
+                                <img src="data:image/png;base64,{{ image }}" class="img-fluid rounded border" alt="molecule image">
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
+                    <div class="mt-3">
+                        <a class="btn btn-secondary" href="/">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
